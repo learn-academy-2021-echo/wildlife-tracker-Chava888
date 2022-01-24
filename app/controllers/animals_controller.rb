@@ -1,4 +1,6 @@
 class AnimalsController < ApplicationController
+    rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
+
     def index
         animals = Animal.all
         render json: animals
@@ -24,6 +26,16 @@ class AnimalsController < ApplicationController
         else
             render json: animal.errors
         end
+    end
+    def show
+        animal = Animal.find(params[:id])
+        render json: animal.as_json(include: :sightings)
+    end
+    def render_unprocessable_entity_response(exception)
+        render json: {
+          message: "Validation Failed",
+          errors: ValidationErrorsSerializer.new(exception.record).serialize
+        }, status: :unprocessable_entity
     end
     private
     def animal_params
