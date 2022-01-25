@@ -15,6 +15,7 @@ class Animal < ApplicationRecord
     validates :common_name, :latin_name, uniqueness: true
 
     has_many :sightings
+    accepts_nested_attributes_for :sightings
 end
 
 

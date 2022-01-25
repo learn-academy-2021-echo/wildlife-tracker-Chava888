@@ -24,7 +24,7 @@ class AnimalsController < ApplicationController
         if animal.valid?
             render json: animal
         else
-            render json: animal.errors
+            render json: animal.errors, status: :unprocessable_entity
         end
     end
     def show
@@ -39,6 +39,6 @@ class AnimalsController < ApplicationController
     end
     private
     def animal_params
-        params.require(:animal).permit(:common_name, :latin_name, :kingdom)
+        params.require(:animal).permit(:common_name, :latin_name, :kingdom, sightings_attributes: [:date, :latitude, :longitude])
     end
 end
